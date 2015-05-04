@@ -16,7 +16,8 @@ Where X is the current directory:
 
 1. If X/file.ext exists, return it. STOP
 2. If X/.dir/file.ext exists, return it. STOP
-3. If any, change X to parent directory. GO TO 1
+3. If X has a parent directory, change X to parent. GO TO 1
+4. Return NULL.
 
 ## Install
 
