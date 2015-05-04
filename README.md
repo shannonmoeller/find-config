@@ -2,7 +2,17 @@
 
 [![NPM version][npm-img]][npm-url] [![Downloads][downloads-img]][npm-url] [![Build Status][travis-img]][travis-url] [![Coverage Status][coveralls-img]][coveralls-url] [![Chat][gitter-img]][gitter-url]
 
-Find the first config file matching a given name in the current directory or the nearest ancestor directory. Supports finding files within a subdirectroy of an ancestor directory. Highly configurable with defaults set to support the [XDG Base Directory Specification](http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html) for configuration files.
+Finds the first matching config file, if any, in the current directory or the nearest ancestor directory. Supports finding files within a subdirectroy of an ancestor directory. Configurable with defaults set to support the [XDG Base Directory Specification][xdg] for configuration files.
+
+[xdg]: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
+
+## Algorithm
+
+Where X is the current directory:
+
+If X/file.ext exists, load it. STOP
+If X/.dir/file.ext exists, load it. STOP
+Change X to parent directory. GO TO 1
 
 ## Install
 
@@ -17,11 +27,13 @@ With [Node.js](http://nodejs.org):
 - `filename` `String` - Name of the configuration file to find.
 - `options` `{Object=}`
   - `cwd` `{String=}` - Directory in which to start looking. (Default: `process.cwd()`).
-  - `dirname` `{String=}` - An optional subdirectory to check at each level. (Default: `.config`).
-  - `isModule` `{Boolean}` - Whether to use Node.js [module resolution](https://nodejs.org/api/modules.html#modules_all_together). (Default: `false`).
+  - `dir` `{String=}` - An optional subdirectory to check at each level. (Default: `.config`).
+  - `asModule` `{Boolean}` - Whether to use Node.js [module resolution][modres]. (Default: `false`).
   - `keepDot` `{Boolean}` - Whether to keep the leading dot in the filename for matches in a subdirectory. (Default: `false`).
 
 Synchronously find the first config file matching a given name in the current directory or the nearest ancestor directory.
+
+[modres]: https://nodejs.org/api/modules.html#modules_all_together
 
 ```js
 var findConfig = require('find-config');
@@ -37,14 +49,14 @@ var foo = findConfig('.foorc', { keepDot: true });
 
 // Find the nearest module using Node.js module resolution.
 // Will look for `bar.js` or `bar/index.js`, etc.
-var foo = findConfig('bar', { isModule: true });
+var foo = findConfig('bar', { asModule: true });
 
 // Find the nearest `baz.json` or `some/path/baz.json`
-var foo = findConfig('baz.json', { dirname: 'some/path' });
+var foo = findConfig('baz.json', { dir: 'some/path' });
 
 // Find the nearest `qux.json` or `some/path/qux.json` in
 // some other directory or its nearest ancestor directory.
-var foo = findConfig('qux.json', { cwd: '/other/dir', dirname: 'some/path' });
+var foo = findConfig('qux.json', { cwd: '/other/dir', dir: 'some/path' });
 ```
 
 ### `findConfig.read(filename, [options]) : String|Null`
@@ -66,19 +78,11 @@ var travis = yaml.safeLoad(findConfig.read('.travis.yml'));
 - `filename` `String` - Name of the configuration file to find.
 - `options` `{Object=}` - Same as `findConfig()`.
 
-Finds and requires the first matching config file, if any. Implies `isModule` is `true`.
+Finds and requires the first matching config file, if any. Implies `asModule` is `true`.
 
 ```js
 var version = findConfig.require('package.json').version;
 ```
-
-## Algorithm
-
-Where X is the current directory:
-
-If X/file.ext exists, load it. STOP
-If X/.config/file.ext exists, load it. STOP
-Change X to parent directory. GO TO 1
 
 ## Contribute
 

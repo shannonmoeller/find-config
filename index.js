@@ -10,23 +10,25 @@ function resolveFile(filepath) {
 	}
 	catch (err) {
 		// Not the droid we're looking for.
+		return false;
 	}
 }
 
 function resolveModule(filepath) {
 	try {
 		// Does X/file.ext exist?
+		// Does X/file.ext.js exist?
 		// Does X/file.ext/index.js exist?
-		// Does X/file.ext/index.json exist?
 		return require.resolve(filepath);
 	}
 	catch (err) {
 		// Not the droid we're looking for.
+		return false;
 	}
 }
 
 function resolve(filepath, options) {
-	if (options.isModule) {
+	if (options.asModule) {
 		return resolveModule(filepath);
 	}
 
@@ -45,10 +47,12 @@ function lookup(options) {
 	}
 
 	// Does X/.dir/file.ext exist?
-	filepath = resolve(path.join(cwd, options.dirname, options.dotless), options);
+	if (options.dir) {
+		filepath = resolve(path.join(cwd, options.dir, options.dotless), options);
 
-	if (filepath) {
-		return filepath;
+		if (filepath) {
+			return filepath;
+		}
 	}
 
 	// Does X have a parent directory?
@@ -69,11 +73,14 @@ function normalizeOptions(filename, options) {
 	options = Object.create(options || {});
 
 	options.cwd = path.resolve(options.cwd || process.cwd());
-	options.dirname = options.dirname || '.config';
 	options.filename = filename;
 	options.dotless = filename;
 
-	if (!options.keepDot) {
+	if (options.dir == null) {
+		options.dir = '.config';
+	}
+
+	if (options.keepDot !== true) {
 		options.dotless = filename
 			.replace(/^\./, '');
 	}
@@ -82,17 +89,20 @@ function normalizeOptions(filename, options) {
 }
 
 /**
- * Attempts to find the path to a configuration file in the current directory
- * or any ancestor directory. Supports XDG-style directories by also looking
- * in `.config` subdirectories at each level.
+ * Finds the first matching config file, if any, in the current directory or the
+ * nearest ancestor directory. Supports finding files within a subdirectroy of
+ * an ancestor directory. Configurable with defaults set to support the
+ * [XDG Base Directory Specification][xdg] for configuration files.
+ *
+ * [xdg]: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
  *
  * @type {Function}
  * @param {String} filename
  * @param {Object} options
  * @param {String=} options.cwd Defaults to `process.cwd()`.
- * @param {String=} options.dirname Defaults to `.config`.
+ * @param {String=} options.dir Defaults to `.config`.
  * @param {Boolean} options.keepDot Whether to keep the leading dot in the filename for matches in a subdirectory.
- * @param {Boolean} options.isModule Whether to resolve paths as Node.js modules.
+ * @param {Boolean} options.asModule Whether to resolve paths as Node.js modules.
  * @return {?String}
  */
 function findConfig(filename, options) {
@@ -106,11 +116,13 @@ function findConfig(filename, options) {
 }
 
 /**
-  Attempts to find and read a configuration file.
+ * Finds and reads the first matching config file, if any.
  *
  * @type {Function}
  * @param {String} filename
  * @param {Object} options Same as `findConfig` options.
+ * @param {String} encoding Defaults to `'utf8'`.
+ * @param {String} flag Defaults to `'r'`.
  * @return {?String}
  */
 findConfig.read = function (filename, options) {
@@ -121,13 +133,13 @@ findConfig.read = function (filename, options) {
 	}
 
 	return fs.readFileSync(filename, {
-		encoding: options.encoding,
+		encoding: options.encoding || 'utf8',
 		flag: options.flag
 	});
 };
 
 /**
- * Attempts to require a configuration file.
+ * Finds and requires the first matching config file, if any. Implies `asModule` is `true`.
  *
  * @type {Function}
  * @param {String} filename
@@ -135,6 +147,9 @@ findConfig.read = function (filename, options) {
  * @return {?String}
  */
 findConfig.require = function (filename, options) {
+	options = normalizeOptions(filename, options);
+	options.asModule = true;
+
 	filename = findConfig(filename, options);
 
 	if (!filename) {
