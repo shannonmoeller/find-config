@@ -1,0 +1,39 @@
+{
+  "name": "find-config",
+  "version": "0.1.0",
+  "description": "Find the first config file matching a given name in the current directory or the nearest ancestor directory.",
+  "keywords": [
+    "config",
+    "dot",
+    "rc",
+    "file",
+    "find",
+    "glob",
+    "xdg"
+  ],
+  "homepage": "https://github.com/shannonmoeller/find-config",
+  "bugs": "https://github.com/shannonmoeller/find-config/issues",
+  "license": "MIT",
+  "author": "Shannon Moeller <me@shannonmoeller.com> (http://shannonmoeller.com)",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shannonmoeller/find-config.git"
+  },
+  "scripts": {
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "test": "gulp test"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "coveralls": "^2.11.2",
+    "expect": "^1.6.0",
+    "gulp": "^3.8.11",
+    "gulp-istanbul": "^0.8.1",
+    "gulp-jscs": "^1.5.2",
+    "gulp-jshint": "^1.10.0",
+    "gulp-mocha": "^2.0.1",
+    "jshint-stylish": "^1.0.1"
+  }
+}
