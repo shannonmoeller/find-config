@@ -10,9 +10,9 @@ Finds the first matching config file, if any, in the current directory or the ne
 
 Where X is the current directory:
 
-1. If X/file.ext exists, load it. STOP
-2. If X/.dir/file.ext exists, load it. STOP
-3. Change X to parent directory. GO TO 1
+1. If X/file.ext exists, return it. STOP
+2. If X/.dir/file.ext exists, return it. STOP
+3. If any, change X to parent directory. GO TO 1
 
 ## Install
 
