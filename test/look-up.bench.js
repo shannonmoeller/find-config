@@ -7,5 +7,5 @@ var lookup = require('look-up'),
 	};
 
 module.exports = function () {
-	return lookup('.{,config/}waldo', options);
+	return lookup('**/.{,config/}waldo', options);
 };
