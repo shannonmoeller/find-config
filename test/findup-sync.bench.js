@@ -1,9 +1,13 @@
 var findup = require('findup-sync'),
 	path = require('path'),
-	options = {
-		cwd: path.join(__dirname, 'fixtures/a/b')
-	};
+	cwd = path.join(__dirname, 'fixtures/a/b');
 
-module.exports = function () {
-	return findup('.{,config/}waldo', options);
-};
+function test() {
+	return findup('.{,config/}waldo', {
+		cwd: cwd
+	});
+}
+
+console.log(test());
+
+module.exports = test;

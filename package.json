@@ -37,6 +37,7 @@
     "gulp-jshint": "^1.10.0",
     "gulp-mocha": "^2.0.1",
     "jshint-stylish": "^1.0.1",
-    "look-up": "^0.7.1"
+    "look-up": "^0.7.1",
+    "microtime": "^1.4.0"
   }
 }

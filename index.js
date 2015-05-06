@@ -1,7 +1,11 @@
 'use strict';
 
 var fs = require('fs'),
-	path = require('path');
+	path = require('path'),
+
+	DEFAULT_DIR = '.config',
+	DEFAULT_ENC = 'utf8',
+	LEADING_DOT = /^\./;
 
 function resolveFile(filepath) {
 	try {
@@ -27,67 +31,6 @@ function resolveModule(filepath) {
 	}
 }
 
-function resolve(filepath, options) {
-	if (options.asModule) {
-		return resolveModule(filepath);
-	}
-
-	return resolveFile(filepath);
-}
-
-function lookup(options) {
-	var filepath, parent,
-		cwd = options.cwd;
-
-	// Does X/file.ext exist?
-	filepath = resolve(path.join(cwd, options.filename), options);
-
-	if (filepath) {
-		return filepath;
-	}
-
-	// Does X/.dir/file.ext exist?
-	if (options.dir) {
-		filepath = resolve(path.join(cwd, options.dir, options.dotless), options);
-
-		if (filepath) {
-			return filepath;
-		}
-	}
-
-	// Does X have a parent directory?
-	parent = path.dirname(cwd);
-
-	if (parent === cwd) {
-		return null;
-	}
-
-	// Ascend and repeat.
-	options.cwd = parent;
-
-	return lookup(options);
-}
-
-function normalizeOptions(filename, options) {
-	filename = filename || '';
-	options = Object.create(options || {});
-
-	options.cwd = path.resolve(options.cwd || process.cwd());
-	options.filename = filename;
-	options.dotless = filename;
-
-	if (options.dir == null) {
-		options.dir = '.config';
-	}
-
-	if (options.keepDot !== true) {
-		options.dotless = filename
-			.replace(/^\./, '');
-	}
-
-	return options;
-}
-
 /**
  * Finds the first matching config file, if any, in the current directory or the
  * nearest ancestor directory. Supports finding files within a subdirectroy of
@@ -100,19 +43,53 @@ function normalizeOptions(filename, options) {
  * @param {String} filename
  * @param {Object} options
  * @param {String=} options.cwd Defaults to `process.cwd()`.
- * @param {String=} options.dir Defaults to `.config`.
+ * @param {String=} options.dir Defaults to `'.config'`.
  * @param {Boolean} options.keepDot Whether to keep the leading dot in the filename for matches in a subdirectory.
  * @param {Boolean} options.asModule Whether to resolve paths as Node.js modules.
  * @return {?String}
  */
 function findConfig(filename, options) {
-	options = normalizeOptions(filename, options);
+	if (!filename) return null;
+	options = options || {};
 
-	if (!options.filename) {
-		return null;
+	var current, filepath,
+
+		// File or module?
+		resolve = !options.asModule
+			? resolveFile
+			: resolveModule,
+
+		// Keep leading dot in filename?
+		dotless = !options.keepDot
+			? filename.replace(LEADING_DOT, '')
+			: filename,
+
+		// What subdir?
+		dir = options.dir != null
+			? options.dir
+			: DEFAULT_DIR,
+
+		// Chunk path.
+		sep = path.sep,
+		cwd = path.resolve(options.cwd || '.').split(sep),
+		i = cwd.length;
+
+	while (i--) {
+		current = cwd.join(sep);
+
+		// Does X/file.ext exist?
+		filepath = resolve(path.join(current, filename));
+		if (filepath) return filepath;
+
+		// Does X/.dir/file.ext exist?
+		filepath = dir && resolve(path.join(current, dir, dotless));
+		if (filepath) return filepath;
+
+		// Change X to parent
+		cwd.pop();
 	}
 
-	return lookup(options);
+	return null;
 }
 
 /**
@@ -127,13 +104,10 @@ function findConfig(filename, options) {
  */
 findConfig.read = function (filename, options) {
 	filename = findConfig(filename, options);
-
-	if (!filename) {
-		return null;
-	}
+	if (!filename) return null;
 
 	return fs.readFileSync(filename, {
-		encoding: options.encoding || 'utf8',
+		encoding: options.encoding || DEFAULT_ENC,
 		flag: options.flag
 	});
 };
@@ -147,14 +121,11 @@ findConfig.read = function (filename, options) {
  * @return {?String}
  */
 findConfig.require = function (filename, options) {
-	options = normalizeOptions(filename, options);
+	options = options || {};
 	options.asModule = true;
 
 	filename = findConfig(filename, options);
-
-	if (!filename) {
-		return null;
-	}
+	if (!filename) return null;
 
 	return require(filename);
 };

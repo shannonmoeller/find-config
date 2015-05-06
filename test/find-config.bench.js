@@ -1,9 +1,13 @@
 var findConfig = require('../index'),
 	path = require('path'),
-	options = {
-		cwd: path.join(__dirname, 'fixtures/a/b')
-	};
+	cwd = path.join(__dirname, 'fixtures/a/b');
 
-module.exports = function () {
-	return findConfig('.waldo', options);
-};
+function test() {
+	return findConfig('.waldo', {
+		cwd: cwd
+	});
+}
+
+console.log(test());
+
+module.exports = test;

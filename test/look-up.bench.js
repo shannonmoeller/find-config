@@ -1,11 +1,13 @@
 var lookup = require('look-up'),
 	path = require('path'),
-	options = {
-		cwd: path.join(__dirname, 'fixtures/a/b'),
-		braces: true,
-		matchBase: true
-	};
+	cwd = path.join(__dirname, 'fixtures/a/b');
 
-module.exports = function () {
-	return lookup('**/.{,config/}waldo', options);
-};
+function test() {
+	return lookup(['.waldo', '.config/waldo'], {
+		cwd: cwd
+	});
+}
+
+console.log(test());
+
+module.exports = test;

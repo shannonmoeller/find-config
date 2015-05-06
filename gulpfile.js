@@ -10,20 +10,13 @@ var gulp = require('gulp'),
 gulp.task('default', ['test']);
 
 gulp.task('bench', function (done) {
-	var findConfig = require('./test/find-config.bench'),
-		findup = require('./test/findup-sync.bench'),
-		lookup = require('./test/look-up.bench'),
-		Benchmark = require('benchmark'),
+	var Benchmark = require('benchmark'),
 		suite = new Benchmark.Suite();
 
-	console.log('find-config:', findConfig());
-	console.log('findup-sync:', findup());
-	console.log('look-up:    ', lookup());
-
 	suite
-		.add('find-config', findConfig)
-		.add('findup-sync', findup)
-		.add('look-up', lookup)
+		.add('find-config', require('./test/find-config.bench'))
+		.add('findup-sync', require('./test/findup-sync.bench'))
+		.add('look-up', require('./test/look-up.bench'))
 		.on('cycle', function (event) {
 			console.log(String(event.target));
 		})
