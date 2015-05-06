@@ -32,7 +32,7 @@ With [Node.js](http://nodejs.org):
 - `filename` `String` - Name of the configuration file to find.
 - `options` `{Object=}`
   - `cwd` `{String=}` - Directory in which to start looking. (Default: `process.cwd()`).
-  - `dir` `{String=}` - An optional subdirectory to check at each level. (Default: `.config`).
+  - `dir` `{String=}` - An optional subdirectory to check at each level. (Default: `'.config'`).
   - `asModule` `{Boolean}` - Whether to use Node.js [module resolution][modres]. (Default: `false`).
   - `keepDot` `{Boolean}` - Whether to keep the leading dot in the filename for matches in a subdirectory. (Default: `false`).
 
