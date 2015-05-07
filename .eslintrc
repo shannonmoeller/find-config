@@ -48,7 +48,7 @@
     "no-dupe-args": 2,                        // disallow duplicate arguments in functions
     "no-dupe-keys": 2,                        // disallow duplicate keys when creating object literals
     "no-duplicate-case": 2,                   // disallow a duplicate case label.
-    "no-empty": 2,                            // disallow empty statements
+    "no-empty": 0,                            // disallow empty statements
     "no-empty-class": 2,                      // disallow the use of empty character classes in regular expressions
     "no-ex-assign": 2,                        // disallow assigning to the exception in a catch block
     "no-extra-boolean-cast": 2,               // disallow double-negation boolean casts in a boolean context
@@ -78,7 +78,7 @@
 
     // Best Practices
     "block-scoped-var": 0,                    // treat var statements as if they were block scoped (off by default)
-    "complexity": 2,                          // specify the maximum cyclomatic complexity allowed in a program (off by default)
+    "complexity": 0,                          // specify the maximum cyclomatic complexity allowed in a program (off by default)
     "consistent-return": 2,                   // require return statements to either always or never specify values
     "curly": [2, "multi-line"],               // specify curly brace conventions for all control statements
     "default-case": 2,                        // require default case in switch statements (off by default)
@@ -161,7 +161,7 @@
     "indent": [2, "tab", {                    // this option sets a specific tab width for your code (off by default)
       "indentSwitchCase": true
     }],
-    "brace-style": [2, "stroustrup"],         // enforce one true brace style (off by default)
+    "brace-style": [0, "stroustrup"],         // enforce one true brace style (off by default)
     "camelcase": [2, {                        // require camel case names
       "properties": "always"
     }],

@@ -24,7 +24,9 @@
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "test": "gulp test"
   },
-  "dependencies": {},
+  "dependencies": {
+    "user-home": "^1.1.1"
+  },
   "devDependencies": {
     "benchmark": "^1.0.0",
     "coveralls": "^2.11.2",

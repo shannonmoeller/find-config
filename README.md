@@ -33,8 +33,9 @@ With [Node.js](http://nodejs.org):
 - `options` `{Object=}`
   - `cwd` `{String=}` - Directory in which to start looking. (Default: `process.cwd()`).
   - `dir` `{String=}` - An optional subdirectory to check at each level. (Default: `'.config'`).
-  - `asModule` `{Boolean}` - Whether to use Node.js [module resolution][modres]. (Default: `false`).
-  - `keepDot` `{Boolean}` - Whether to keep the leading dot in the filename for matches in a subdirectory. (Default: `false`).
+  - `asModule` `{Boolean=}` - Whether to use Node.js [module resolution][modres]. (Default: `false`).
+  - `home` `{Boolean=}` - Whether to check the user's home directory if no matches are found.
+  - `keepDot` `{Boolean=}` - Whether to keep the leading dot in the filename for matches in a subdirectory. (Default: `false`).
 
 Synchronously find the first config file matching a given name in the current directory or the nearest ancestor directory.
 

@@ -63,26 +63,26 @@ describe('require-glob e2e', function () {
 	});
 
 	it('should keep leading dots in .dir', function () {
-		var options = { cwd: 'fixtures/a/b', keepDot: true };
+		var options = { cwd: 'fixtures/a/b', dot: true };
 
 		expect(findConfig('.fred', options)).toBe(path.resolve('fixtures/.config/.fred'));
 		expect(findConfig('.waldo', options)).toBe(null);
 
 		process.chdir('fixtures/a/b');
-		options = { keepDot: true };
+		options = { dot: true };
 
 		expect(findConfig('.fred', options)).toBe(path.resolve('../../.config/.fred'));
 		expect(findConfig('.waldo', options)).toBe(null);
 	});
 
 	it('should resolve modules', function () {
-		var options = { cwd: 'fixtures/a/b', asModule: true };
+		var options = { cwd: 'fixtures/a/b', module: true };
 
 		expect(findConfig('b', options)).toBe(path.resolve('fixtures/b.js'));
 		expect(findConfig('baz', options)).toBe(path.resolve('fixtures/a/.config/baz.js'));
 
 		process.chdir('fixtures/a/b');
-		options = { asModule: true };
+		options = { module: true };
 
 		expect(findConfig('b', options)).toBe(path.resolve('../../b.js'));
 		expect(findConfig('baz', options)).toBe(path.resolve('../.config/baz.js'));
@@ -91,7 +91,7 @@ describe('require-glob e2e', function () {
 	it('should not find non-existant files', function () {
 		expect(findConfig()).toBe(null);
 		expect(findConfig(null)).toBe(null);
-		expect(findConfig(nofile)).toBe(null);
+		expect(findConfig(nofile, { home: false })).toBe(null);
 	});
 
 	describe('read', function () {
@@ -106,6 +106,13 @@ describe('require-glob e2e', function () {
 			expect(findConfig.read()).toBe(null);
 			expect(findConfig.read(null)).toBe(null);
 			expect(findConfig.read(nofile)).toBe(null);
+			expect(findConfig.read(nofile, { home: false })).toBe(null);
+
+			function findDir() {
+				findConfig.read('b', { cwd: 'fixtures/a/b' });
+			}
+
+			expect(findDir).toThrow();
 		});
 	});
 
@@ -121,6 +128,7 @@ describe('require-glob e2e', function () {
 			expect(findConfig.require()).toBe(null);
 			expect(findConfig.require(null)).toBe(null);
 			expect(findConfig.require(nofile)).toBe(null);
+			expect(findConfig.require(nofile, { home: false })).toBe(null);
 		});
 	});
 });
