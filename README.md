@@ -33,9 +33,9 @@ With [Node.js](http://nodejs.org):
 - `options` `{Object=}`
   - `cwd` `{String=}` - Directory in which to start looking. (Default: `process.cwd()`).
   - `dir` `{String=}` - An optional subdirectory to check at each level. (Default: `'.config'`).
-  - `asModule` `{Boolean=}` - Whether to use Node.js [module resolution][modres]. (Default: `false`).
-  - `home` `{Boolean=}` - Whether to check the user's home directory if no matches are found.
-  - `keepDot` `{Boolean=}` - Whether to keep the leading dot in the filename for matches in a subdirectory. (Default: `false`).
+  - `dot` `{Boolean=}` - Whether to keep the leading dot in the filename for matches in a subdirectory. (Default: `false`)
+  - `home` `{Boolean=}` - Whether to check the user's home directory if no matches are found. (Default: `true`)
+  - `module` `{Boolean=}` - Whether to use Node.js [module resolution][modres]. (Default: `false`)
 
 Synchronously find the first config file matching a given name in the current directory or the nearest ancestor directory.
 
@@ -51,11 +51,11 @@ var pkg = findConfig('package.json');
 var foo = findConfig('.foorc');
 
 // Find the nearest `.foorc` or `.config/.foorc`
-var foo = findConfig('.foorc', { keepDot: true });
+var foo = findConfig('.foorc', { dot: true });
 
 // Find the nearest module using Node.js module resolution.
 // Will look for `bar.js` or `bar/index.js`, etc.
-var foo = findConfig('bar', { asModule: true });
+var foo = findConfig('bar', { module: true });
 
 // Find the nearest `baz.json` or `some/path/baz.json`
 var foo = findConfig('baz.json', { dir: 'some/path' });
@@ -68,7 +68,7 @@ var foo = findConfig('qux.json', { cwd: '/other/dir', dir: 'some/path' });
 ### `findConfig.read(filename, [options]) : String|Null`
 
 - `filename` `String` - Name of the configuration file to find.
-- `options` `{Object=}` - Same as `findConfig()`.
+- `options` `{Object=}` - Same as `findConfig()` with two additions.
   - `encoding` `{String}` - File encoding. (Default: `'utf8'`).
   - `flag` `{String}` - Flag. (Default: `'r'`).
 
@@ -84,7 +84,7 @@ var travis = yaml.safeLoad(findConfig.read('.travis.yml'));
 - `filename` `String` - Name of the configuration file to find.
 - `options` `{Object=}` - Same as `findConfig()`.
 
-Finds and requires the first matching config file, if any. Implies `asModule` is `true`.
+Finds and requires the first matching config file, if any. Implies `module` is `true`.
 
 ```js
 var version = findConfig.require('package.json').version;
