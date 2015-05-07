@@ -22,10 +22,10 @@ function resolveModule(filepath) {
 }
 
 /**
- * Finds the first matching config file, if any, in the current directory or the
- * nearest ancestor directory. Supports finding files within a subdirectroy of
- * an ancestor directory. Configurable with defaults set to support the
- * [XDG Base Directory Specification][xdg] for configuration files.
+ * Finds the first matching config file, if any, in the current directory,
+ * nearest ancestor, or user's home directory. Supports finding files within a
+ * subdirectory of an ancestor directory. Configurable with defaults set to
+ * support the [XDG Base Directory Specification][xdg] for configuration files.
  *
  * [xdg]: http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
  *
@@ -34,12 +34,9 @@ function resolveModule(filepath) {
  * @param {Object=} options
  * @param {String=} options.cwd (Default: `process.cwd()`)
  * @param {String=} options.dir (Default: `'.config'`)
- * @param {Boolean=} options.dot Whether to keep the leading dot in the filename
- *   for matches in a subdirectory. (Default: `false`)
- * @param {Boolean=} options.home Whether to check the user's home directory if
- *   no matches are found. (Default: `true`)
- * @param {Boolean=} options.module Whether to resolve paths as Node.js modules.
- *   (Default: `false`)
+ * @param {Boolean=} options.dot Whether to keep the leading dot in the filename in `dir`. (Default: `false`)
+ * @param {Boolean=} options.home Whether to also check the user's home directory. (Default: `true`)
+ * @param {Boolean=} options.module Whether to use Node.js module resolution. (Default: `false`)
  * @return {?String}
  */
 function findConfig(filename, options) {

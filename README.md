@@ -2,7 +2,7 @@
 
 [![NPM version][npm-img]][npm-url] [![Downloads][downloads-img]][npm-url] [![Build Status][travis-img]][travis-url] [![Coverage Status][coveralls-img]][coveralls-url] [![Chat][gitter-img]][gitter-url]
 
-Finds the first matching config file, if any, in the current directory or the nearest ancestor directory. Supports finding files within a subdirectroy of an ancestor directory. Configurable with defaults set to support the [XDG Base Directory Specification][xdg] for configuration files.
+Finds the first matching config file, if any, in the current directory, nearest ancestor, or user's home directory. Supports finding files within a subdirectory of an ancestor directory. Configurable with defaults set to support the [XDG Base Directory Specification][xdg] for configuration files.
 
 Because this module is intended to find consistently named configuration files, it is case-sensitive and does not support globs. If you need a more generic solution, see [findup-sync][fus] or [look-up][lku].
 
@@ -33,8 +33,8 @@ With [Node.js](http://nodejs.org):
 - `options` `{Object=}`
   - `cwd` `{String=}` - Directory in which to start looking. (Default: `process.cwd()`).
   - `dir` `{String=}` - An optional subdirectory to check at each level. (Default: `'.config'`).
-  - `dot` `{Boolean=}` - Whether to keep the leading dot in the filename for matches in a subdirectory. (Default: `false`)
-  - `home` `{Boolean=}` - Whether to check the user's home directory if no matches are found. (Default: `true`)
+  - `dot` `{Boolean=}` - Whether to keep the leading dot in the filename in `dir`. (Default: `false`)
+  - `home` `{Boolean=}` - Whether to also check the user's home directory. (Default: `true`)
   - `module` `{Boolean=}` - Whether to use Node.js [module resolution][modres]. (Default: `false`)
 
 Synchronously find the first config file matching a given name in the current directory or the nearest ancestor directory.
