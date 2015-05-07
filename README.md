@@ -4,7 +4,7 @@
 
 Finds the first matching config file, if any, in the current directory or the nearest ancestor directory. Supports finding files within a subdirectroy of an ancestor directory. Configurable with defaults set to support the [XDG Base Directory Specification][xdg] for configuration files.
 
-Because this module is intended to find a consistently named configuration file, it is case-sensitive and does not support globs. If you need a more generic solution, see [findup-sync][fus] or [look-up][lku].
+Because this module is intended to find consistently named configuration files, it is case-sensitive and does not support globs. If you need a more generic solution, see [findup-sync][fus] or [look-up][lku].
 
 [fus]: https://www.npmjs.com/package/findup-sync
 [lku]: https://www.npmjs.com/package/look-up
