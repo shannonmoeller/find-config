@@ -32,8 +32,8 @@ function resolveModule(filepath) {
  * @type {Function}
  * @param {String} filename
  * @param {Object=} options
- * @param {String=} options.cwd (Default: `process.cwd()`)
- * @param {String=} options.dir (Default: `'.config'`)
+ * @param {String=} options.cwd Directory in which to start looking. (Default: `process.cwd()`)
+ * @param {String=} options.dir An optional subdirectory to check at each level. (Default: `'.config'`)
  * @param {Boolean=} options.dot Whether to keep the leading dot in the filename in `dir`. (Default: `false`)
  * @param {Boolean=} options.home Whether to also check the user's home directory. (Default: `true`)
  * @param {Boolean=} options.module Whether to use Node.js module resolution. (Default: `false`)

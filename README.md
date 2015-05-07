@@ -31,8 +31,8 @@ With [Node.js](http://nodejs.org):
 
 - `filename` `String` - Name of the configuration file to find.
 - `options` `{Object=}`
-  - `cwd` `{String=}` - Directory in which to start looking. (Default: `process.cwd()`).
-  - `dir` `{String=}` - An optional subdirectory to check at each level. (Default: `'.config'`).
+  - `cwd` `{String=}` - Directory in which to start looking. (Default: `process.cwd()`)
+  - `dir` `{String=}` - An optional subdirectory to check at each level. (Default: `'.config'`)
   - `dot` `{Boolean=}` - Whether to keep the leading dot in the filename in `dir`. (Default: `false`)
   - `home` `{Boolean=}` - Whether to also check the user's home directory. (Default: `true`)
   - `module` `{Boolean=}` - Whether to use Node.js [module resolution][modres]. (Default: `false`)
@@ -110,7 +110,7 @@ Licensed under [MIT](http://shannonmoeller.com/mit.txt)
 [coveralls-url]: https://coveralls.io/r/shannonmoeller/find-config
 [downloads-img]: http://img.shields.io/npm/dm/find-config.svg?style=flat-square
 [gitter-img]:    http://img.shields.io/badge/gitter-join_chat-1dce73.svg?style=flat-square
-[gitter-url]:    https://gitter.im/shannonmoeller/find-config
+[gitter-url]:    https://gitter.im/shannonmoeller/shannonmoeller
 [gittip-img]:    http://img.shields.io/gittip/shannonmoeller.svg?style=flat-square
 [gittip-url]:    https://www.gittip.com/shannonmoeller
 [npm-img]:       http://img.shields.io/npm/v/find-config.svg?style=flat-square
