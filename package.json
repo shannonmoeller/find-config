@@ -1,6 +1,6 @@
 {
   "name": "find-config",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Find the first config file matching a given name in the current directory or the nearest ancestor directory.",
   "keywords": [
     "config",
