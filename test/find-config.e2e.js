@@ -4,9 +4,10 @@
 var findConfig = require('../index'),
 	expect = require('expect'),
 	path = require('path'),
+	pathResolve = path.resolve,
 	nofile = 'find-config-3da35411-9d24-4dec-a7cb-3cb9416db670';
 
-describe('require-glob e2e', function () {
+describe('find-config e2e', function () {
 	beforeEach(function () {
 		process.chdir(__dirname);
 	});
@@ -14,78 +15,78 @@ describe('require-glob e2e', function () {
 	it('should find files', function () {
 		var options = { cwd: 'fixtures/a/b' };
 
-		expect(findConfig('foo.txt', options)).toBe(path.resolve('fixtures/a/foo.txt'));
-		expect(findConfig('bar.txt', options)).toBe(path.resolve('fixtures/a/b/bar.txt'));
-		expect(findConfig('a.txt', options)).toBe(path.resolve('fixtures/a.txt'));
+		expect(findConfig('foo.txt', options)).toBe(pathResolve('fixtures/a/foo.txt'));
+		expect(findConfig('bar.txt', options)).toBe(pathResolve('fixtures/a/b/bar.txt'));
+		expect(findConfig('a.txt', options)).toBe(pathResolve('fixtures/a.txt'));
 
 		process.chdir('fixtures/a/b');
 
-		expect(findConfig('foo.txt')).toBe(path.resolve('../foo.txt'));
-		expect(findConfig('bar.txt')).toBe(path.resolve('./bar.txt'));
-		expect(findConfig('a.txt')).toBe(path.resolve('../../a.txt'));
+		expect(findConfig('foo.txt')).toBe(pathResolve('../foo.txt'));
+		expect(findConfig('bar.txt')).toBe(pathResolve('./bar.txt'));
+		expect(findConfig('a.txt')).toBe(pathResolve('../../a.txt'));
 	});
 
 	it('should find files in a directory', function () {
 		var options = { cwd: 'fixtures/a/b' };
 
-		expect(findConfig('baz.txt', options)).toBe(path.resolve('fixtures/a/.config/baz.txt'));
-		expect(findConfig('qux.txt', options)).toBe(path.resolve('fixtures/a/b/.config/qux.txt'));
+		expect(findConfig('baz.txt', options)).toBe(pathResolve('fixtures/a/.config/baz.txt'));
+		expect(findConfig('qux.txt', options)).toBe(pathResolve('fixtures/a/b/.config/qux.txt'));
 
 		process.chdir('fixtures/a/b');
 
-		expect(findConfig('baz.txt', options)).toBe(path.resolve('../.config/baz.txt'));
-		expect(findConfig('qux.txt', options)).toBe(path.resolve('./.config/qux.txt'));
+		expect(findConfig('baz.txt', options)).toBe(pathResolve('../.config/baz.txt'));
+		expect(findConfig('qux.txt', options)).toBe(pathResolve('./.config/qux.txt'));
 	});
 
 	it('should find files in a directory', function () {
 		var options = { cwd: 'fixtures/a/b', dir: false };
 
 		expect(findConfig('baz.txt', options)).toBe(null);
-		expect(findConfig('a.txt', options)).toBe(path.resolve('fixtures/a.txt'));
+		expect(findConfig('a.txt', options)).toBe(pathResolve('fixtures/a.txt'));
 
 		process.chdir('fixtures/a/b');
 		options = { dir: false };
 
 		expect(findConfig('baz.txt', options)).toBe(null);
-		expect(findConfig('a.txt', options)).toBe(path.resolve('../../a.txt'));
+		expect(findConfig('a.txt', options)).toBe(pathResolve('../../a.txt'));
 	});
 
 	it('should drop leading dots in .dir', function () {
 		var options = { cwd: 'fixtures/a/b' };
 
 		expect(findConfig('.fred', options)).toBe(null);
-		expect(findConfig('.waldo', options)).toBe(path.resolve('fixtures/.config/waldo'));
+		expect(findConfig('.waldo', options)).toBe(pathResolve('fixtures/.config/waldo'));
 
 		process.chdir('fixtures/a/b');
 
 		expect(findConfig('.fred')).toBe(null);
-		expect(findConfig('.waldo')).toBe(path.resolve('../../.config/waldo'));
+		expect(findConfig('.waldo')).toBe(pathResolve('../../.config/waldo'));
 	});
 
 	it('should keep leading dots in .dir', function () {
 		var options = { cwd: 'fixtures/a/b', dot: true };
 
-		expect(findConfig('.fred', options)).toBe(path.resolve('fixtures/.config/.fred'));
+		expect(findConfig('.fred', options)).toBe(pathResolve('fixtures/.config/.fred'));
 		expect(findConfig('.waldo', options)).toBe(null);
 
 		process.chdir('fixtures/a/b');
 		options = { dot: true };
 
-		expect(findConfig('.fred', options)).toBe(path.resolve('../../.config/.fred'));
+		expect(findConfig('.fred', options)).toBe(pathResolve('../../.config/.fred'));
 		expect(findConfig('.waldo', options)).toBe(null);
 	});
 
 	it('should resolve modules', function () {
 		var options = { cwd: 'fixtures/a/b', module: true };
 
-		expect(findConfig('b', options)).toBe(path.resolve('fixtures/b.js'));
-		expect(findConfig('baz', options)).toBe(path.resolve('fixtures/a/.config/baz.js'));
+		expect(findConfig('b', options)).toBe(pathResolve('fixtures/b.js'));
+		expect(findConfig('baz', options)).toBe(pathResolve('fixtures/a/.config/baz.js'));
 
 		process.chdir('fixtures/a/b');
 		options = { module: true };
 
-		expect(findConfig('b', options)).toBe(path.resolve('../../b.js'));
-		expect(findConfig('baz', options)).toBe(path.resolve('../.config/baz.js'));
+		expect(findConfig('b', options)).toBe(pathResolve('../../b.js'));
+		expect(findConfig('baz', options)).toBe(pathResolve('../.config/baz.js'));
 	});
 
 	it('should not find non-existant files', function () {

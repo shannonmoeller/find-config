@@ -4,21 +4,46 @@ var fs = require('fs'),
 	path = require('path'),
 	home = require('user-home'),
 
+	fsReadFileSync = fs.readFileSync,
+	fsStatSync = fs.statSync,
+	pathJoin = path.join,
+	pathResolve = path.resolve,
+
 	DEFAULT_DIR = '.config',
 	DEFAULT_ENC = 'utf8',
 	LEADING_DOT = /^\./,
 	PATH_SEP = path.sep;
 
-function resolveFile(filepath) {
-	// Does X/file.ext exist?
-	return fs.statSync(filepath) && filepath;
+// Does X/file.ext exist?
+// Else, throw
+function resolveFile(cwd, dir, filename) {
+	dir = pathJoin(cwd, dir);
+
+	var filepath = pathJoin(dir, filename),
+		stat = fsStatSync(filepath);
+
+	return stat && {
+		cwd: cwd,
+		dir: dir,
+		path: filepath
+	};
 }
 
-function resolveModule(filepath) {
-	// Does X/file.ext exist?
-	// Does X/file.ext.js exist?
-	// Does X/file.ext/index.js exist?
-	return require.resolve(filepath);
+// Does X/file.ext exist?
+// Does X/file.ext.js exist?
+// Does X/file.ext/index.js exist?
+// Else, throw
+function resolveModule(cwd, dir, filename) {
+	dir = pathJoin(cwd, dir);
+
+	var filepath = pathJoin(dir, filename),
+		resolved = require.resolve(filepath);
+
+	return resolved && {
+		cwd: cwd,
+		dir: dir,
+		path: resolved
+	};
 }
 
 /**
@@ -40,11 +65,26 @@ function resolveModule(filepath) {
  * @return {?String}
  */
 function findConfig(filename, options) {
+	var config = findConfig.obj(filename, options);
+
+	return config && config.path;
+}
+
+/**
+ * Finds first matching config file, if any and returns the matched directories
+ * and config file path.
+ *
+ * @type {Function}
+ * @param {String} filename
+ * @param {Object} options Same as `findConfig` options.
+ * @return {?Object}
+ */
+findConfig.obj = function (filename, options) {
 	if (!filename) return null;
 
 	options = options || {};
 
-	var filepath,
+	var fileObj,
 
 		// What subdir?
 		dir = options.dir != null
@@ -62,25 +102,25 @@ function findConfig(filename, options) {
 			: resolveFile,
 
 		// Chunk path.
-		cwd = path.resolve(options.cwd || '.').split(PATH_SEP),
+		cwd = pathResolve(options.cwd || '.').split(PATH_SEP),
 		i = cwd.length;
 
 	function test(x) {
 		// Does X/file.ext exist?
-		try { return resolve(path.join(x, filename)); }
+		try { return resolve(x, '', filename); }
 		catch (e) {}
 
 		// Does X/.dir/file.ext exist?
-		try { return resolve(path.join(x, dir, dotless)); }
+		try { return resolve(x, dir, dotless); }
 		catch (e) {}
 	}
 
 	// Walk up path.
 	while (i--) {
-		filepath = test(cwd.join(PATH_SEP));
+		fileObj = test(cwd.join(PATH_SEP));
 
 		// istanbul ignore next
-		if (filepath) return filepath;
+		if (fileObj) return fileObj;
 
 		// Change X to parent.
 		cwd.pop();
@@ -88,14 +128,14 @@ function findConfig(filename, options) {
 
 	// Check in home.
 	if (options.home || options.home == null) {
-		filepath = test(home);
+		fileObj = test(home);
 
 		// istanbul ignore next
-		if (filepath) return filepath;
+		if (fileObj) return fileObj;
 	}
 
 	return null;
-}
+};
 
 /**
  * Finds and reads the first matching config file, if any.
@@ -114,7 +154,7 @@ findConfig.read = function (filename, options) {
 
 	var filepath = findConfig(filename, options);
 
-	return filepath && fs.readFileSync(filepath, {
+	return filepath && fsReadFileSync(filepath, {
 		encoding: options.encoding || DEFAULT_ENC,
 		flag: options.flag
 	});
