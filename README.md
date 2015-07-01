@@ -92,7 +92,7 @@ var version = findConfig.require('package.json').version;
 
 ## Contribute
 
-[![Tasks][waffle-img]][waffle-url] [![Tip][gittip-img]][gittip-url]
+[![Tasks][waffle-img]][waffle-url]
 
 Standards for this project, including tests, code coverage, and semantics are enforced with a build tool. Pull requests must include passing tests with 100% code coverage and no linting errors.
 
@@ -111,8 +111,6 @@ Licensed under [MIT](http://shannonmoeller.com/mit.txt)
 [downloads-img]: http://img.shields.io/npm/dm/find-config.svg?style=flat-square
 [gitter-img]:    http://img.shields.io/badge/gitter-join_chat-1dce73.svg?style=flat-square
 [gitter-url]:    https://gitter.im/shannonmoeller/shannonmoeller
-[gittip-img]:    http://img.shields.io/gittip/shannonmoeller.svg?style=flat-square
-[gittip-url]:    https://www.gittip.com/shannonmoeller
 [npm-img]:       http://img.shields.io/npm/v/find-config.svg?style=flat-square
 [npm-url]:       https://npmjs.org/package/find-config
 [travis-img]:    http://img.shields.io/travis/shannonmoeller/find-config.svg?style=flat-square
